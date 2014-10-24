@@ -6,26 +6,28 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 
-public class ScaleImageView extends ImageView implements OnGlobalLayoutListener, OnScaleGestureListener, OnTouchListener{
+public class ScaleImageView extends ImageView implements OnGlobalLayoutListener, OnScaleGestureListener,
+        OnTouchListener {
 
     private static final String TAG = ScaleImageView.class.getSimpleName();
     private static final float SCALE_MAX = 3.0f;
-    private static final float SCALE_MIN = 1.0f;
 
     private static final float SCALE_BIGGING = 1.08f;
     private static final float SCALE_SMALLING = 0.92f;
 
     private boolean once = true;
 
+    private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
 
     private Matrix matrix = new Matrix();
@@ -38,6 +40,8 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
 
     private int downX;
     private int downY;
+
+    private int touchSlop;
 
     /**
      * 用于存放矩阵的9个值
@@ -53,9 +57,25 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
         super(context, attrs);
         super.setScaleType(ScaleType.MATRIX);
         scaleGestureDetector = new ScaleGestureDetector(context, this);
+        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                if (isScaling) {
+                    return true;
+                }
+                if (isBigMode) {
+                    isBigMode = false;
+                    postDelayed(new AsyScaleTask(1.0 / SCALE_MAX, 16, getWidth() / 2, getHeight() / 2), 16);
+                } else {
+                    isBigMode = true;
+                    postDelayed(new AsyScaleTask(SCALE_MAX, 16, getWidth() / 2, getHeight() / 2), 16);
+                }
+                return true;
+            }
+        });
         this.setOnTouchListener(this);
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
-
 
     @Override
     protected void onAttachedToWindow() {
@@ -112,7 +132,6 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
         }
         float scale = getScale();
         float scaleFactor = detector.getScaleFactor();
-        Log.i(TAG, "scale : " + scale + " scale factor : " + scaleFactor);
         if ((scale < SCALE_MAX && scaleFactor > 1.0f) || (scale > initScale && scaleFactor < 1.0f)) {
             checkBorderAndCenterWhenScale();
             matrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector.getFocusY());
@@ -190,39 +209,71 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
 
     }
 
+    int lastX;
+    int lastY;
+    int lastPointerCount;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        scaleGestureDetector.onTouchEvent(event);
-        switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN: {
-            downX = (int) event.getRawX();
-            downY = (int) event.getRawY();
-            break;
-        }
-        case MotionEvent.ACTION_UP: {
-            int x = (int) event.getRawX();
-            int y = (int) event.getRawY();
-            long time = System.currentTimeMillis();
-            if (time - lastMoveUpTime < 300) {
-                if (Math.abs(downX - x) > 5 || Math.abs(downY - y) > 5) {
-                    return true;
-                }
-                if (isScaling) {
-                    return true;
-                }
-                if (isBigMode) {
-                    isBigMode = false;
-                    postDelayed(new AsyScaleTask(1.0 / SCALE_MAX, 16, getWidth() / 2, getHeight() / 2), 16);
-                } else {
-                    isBigMode = true;
-                    postDelayed(new AsyScaleTask(SCALE_MAX, 16, getWidth() / 2, getHeight() / 2), 16);
-                }
-            }
-            lastMoveUpTime = time;
+        if (gestureDetector.onTouchEvent(event)) {
             return true;
         }
-
+        scaleGestureDetector.onTouchEvent(event);
+        int count = event.getPointerCount();
+        int x = 0, y = 0;
+        for (int i = 0; i < count; i++) {
+            x += event.getX(i);
+            y += event.getY(i);
+        }
+        if (count > 0) {
+            x = x / count;
+            y = y / count;
+        }
+        if (count != lastPointerCount) {
+            lastPointerCount = count;
+            lastX = x;
+            lastY = y;
+        }
+        switch (event.getAction()) {
+        case MotionEvent.ACTION_MOVE: {
+            int dy = y - lastY;
+            int dx = x - lastX;
+            if (getDrawable() == null) {
+                return true;
+            }
+            if (Math.sqrt(dx * dx + dy * dy) > touchSlop) {
+                RectF rectF = getMatrixRectF();
+                // 大小小于屏幕不移动
+                if (rectF.width() < getWidth()) {
+                    dx = 0;
+                }
+                if (rectF.height() < getHeight()) {
+                    dy = 0;
+                }
+                // 边框超过屏幕移动到边界为止
+                // TODO 边界可以修改
+                if(rectF.left > 0 && dx > 0) {
+                    dx = -(int) rectF.left;
+                }
+                if (rectF.top > 0 && dy > 0) {
+                    dy = -(int) rectF.top;
+                }
+                if (rectF.right < getWidth() && dx < 0) {
+                    dx = (int) (getWidth() - rectF.right);
+                }
+                if (rectF.bottom < getHeight() && dy < 0) {
+                    dy = (int) (getHeight() - rectF.bottom);
+                }
+                matrix.postTranslate(dx, dy);
+                setImageMatrix(matrix);
+            }
+            lastX = x;
+            lastY = y;
+            break;
+        }
+        case MotionEvent.ACTION_UP:
         default:
+            lastPointerCount = 0;
             break;
         }
         return true;
@@ -243,8 +294,6 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
             this.delayTime = delayTime;
             this.x = x;
             this.y = y;
-            Log.i(TAG, " cur : " + getScale());
-
             if (getScale() < targetScale) {
                 tempScale = SCALE_BIGGING;
             } else {
@@ -256,11 +305,10 @@ public class ScaleImageView extends ImageView implements OnGlobalLayoutListener,
         @Override
         public void run() {
             float currentScale = getScale();
-            Log.i(TAG, "cur scale : " + currentScale + " tag : " + targetScale);
             checkBorderAndCenterWhenScale();
             matrix.postScale(tempScale, tempScale, x, y);
             setImageMatrix(matrix);
-            if ((tempScale > 1.0f && currentScale < targetScale)||(tempScale < 1.0f && currentScale > targetScale)) {
+            if ((tempScale > 1.0f && currentScale < targetScale) || (tempScale < 1.0f && currentScale > targetScale)) {
                 ScaleImageView.this.postDelayed(this, delayTime);
             } else {
                 tempScale = (float) (targetScale * 1.0f / currentScale);
