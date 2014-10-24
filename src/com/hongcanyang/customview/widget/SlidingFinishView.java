@@ -42,8 +42,6 @@ public class SlidingFinishView extends RelativeLayout implements OnTouchListener
 
     private boolean isSliding = false;
 
-    private boolean hasMeasure = false;
-
     private ViewPager viewPager;
 
     private int touchSlop;

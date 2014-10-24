@@ -33,6 +33,8 @@
          <activity
               android:theme="@android:style/Theme.Translucent"
              android:name="com.hongcanyang.customview.SlidingFinish4ViewPagerActivity"/>
+         <activity 
+             android:name="com.hongcanyang.customview.ScaleImageActivity"></activity>
     </application>
 
 </manifest>

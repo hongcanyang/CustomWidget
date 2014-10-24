@@ -37,8 +37,7 @@ public class VerticalViewGroup extends LinearLayout {
 
 	public VerticalViewGroup(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		WindowManager wm = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		wm.getDefaultDisplay().getMetrics(outMetrics);
 		screenHeight = outMetrics.heightPixels;

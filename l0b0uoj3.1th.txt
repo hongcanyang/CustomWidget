@@ -1,0 +1,39 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch test-at-sliding-statue-to-move-the-orign-position
+# Your branch is up-to-date with 'origin/test-at-sliding-statue-to-move-the-orign-position'.
+#
+# Changes to be committed:
+#	modified:   AndroidManifest.xml
+#	modified:   bin/AndroidManifest.xml
+#	modified:   bin/CustomWidget.apk
+#	modified:   bin/classes.dex
+#	modified:   bin/classes/com/example/verticalviewpagerdemo/R$drawable.class
+#	modified:   bin/classes/com/example/verticalviewpagerdemo/R$id.class
+#	modified:   bin/classes/com/example/verticalviewpagerdemo/R$layout.class
+#	modified:   bin/classes/com/example/verticalviewpagerdemo/R$string.class
+#	modified:   bin/classes/com/hongcanyang/customview/MainActivity.class
+#	new file:   bin/classes/com/hongcanyang/customview/ScaleImageActivity.class
+#	modified:   bin/classes/com/hongcanyang/customview/SlidingFinish4ListviewActivity.class
+#	modified:   bin/classes/com/hongcanyang/customview/SlidingFinish4NormalActivity.class
+#	modified:   bin/classes/com/hongcanyang/customview/SlidingFinish4ViewPagerActivity.class
+#	modified:   bin/classes/com/hongcanyang/customview/VerticalViewGroupActivity.class
+#	modified:   bin/classes/com/hongcanyang/customview/fragment/SlidingFinishFragment.class
+#	new file:   bin/classes/com/hongcanyang/customview/widget/ScaleImageView$AsyScaleTask.class
+#	new file:   bin/classes/com/hongcanyang/customview/widget/ScaleImageView.class
+#	modified:   bin/classes/com/hongcanyang/customview/widget/SlidingFinishView.class
+#	modified:   bin/classes/com/hongcanyang/customview/widget/VerticalViewGroup.class
+#	modified:   bin/resources.ap_
+#	modified:   gen/com/example/verticalviewpagerdemo/R.java
+#	new file:   res/drawable-hdpi/a.jpg
+#	new file:   res/drawable-hdpi/tbug.jpg
+#	modified:   res/layout/activity_main.xml
+#	new file:   res/layout/activity_scale_imageview.xml
+#	modified:   src/com/hongcanyang/customview/MainActivity.java
+#	new file:   src/com/hongcanyang/customview/ScaleImageActivity.java
+#	new file:   src/com/hongcanyang/customview/widget/ScaleImageView.java
+#	modified:   src/com/hongcanyang/customview/widget/SlidingFinishView.java
+#	modified:   src/com/hongcanyang/customview/widget/VerticalViewGroup.java
+#
+

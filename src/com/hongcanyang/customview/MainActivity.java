@@ -12,8 +12,8 @@ import com.example.verticalviewpagerdemo.R;
 public class MainActivity extends Activity implements OnClickListener {
 
     private Button slidingFinishBtn;
-
     private Button verticalViewGroupBtn;
+    private Button scaleImageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,8 @@ public class MainActivity extends Activity implements OnClickListener {
         slidingFinishBtn.setOnClickListener(this);
         verticalViewGroupBtn = (Button) findViewById(R.id.main_vertical_viewgroup);
         verticalViewGroupBtn.setOnClickListener(this);
+        scaleImageBtn = (Button)findViewById(R.id.main_scale_image);
+        scaleImageBtn.setOnClickListener(this);
     }
 
     @Override
@@ -36,6 +38,11 @@ public class MainActivity extends Activity implements OnClickListener {
         case R.id.main_vertical_viewgroup: {
             Intent intent2 = new Intent(MainActivity.this, VerticalViewGroupActivity.class);
             startActivity(intent2);
+            break;
+        }
+        case  R.id.main_scale_image: {
+            Intent intent3 = new Intent(MainActivity.this, ScaleImageActivity.class);
+            startActivity(intent3);
             break;
         }
 
