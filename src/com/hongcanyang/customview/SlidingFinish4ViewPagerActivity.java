@@ -18,11 +18,14 @@ import com.hongcanyang.customview.widget.SlidingFinishView.OnFinishListener;
 
 public class SlidingFinish4ViewPagerActivity extends FragmentActivity {
 
+    private  ViewPager pager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_sliding_finish_viewpager);
+        pager = (ViewPager)findViewById(R.id.sliding_finish_viewpager);
         SlidingFinishView slidingFinishView = (SlidingFinishView) findViewById(R.id.activity_sliding_finish_viewpager);
         slidingFinishView.setFinishListener(new OnFinishListener() {
             @Override
@@ -31,7 +34,6 @@ public class SlidingFinish4ViewPagerActivity extends FragmentActivity {
             }
         });
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.sliding_finish_viewpager);
         SlidingFinishPagerAdapter adapter = new SlidingFinishPagerAdapter(getSupportFragmentManager());
         SlidingFinishFragment fragment1 = new SlidingFinishFragment();
         SlidingFinishFragment fragment2 = new SlidingFinishFragment();
@@ -41,7 +43,7 @@ public class SlidingFinish4ViewPagerActivity extends FragmentActivity {
         list.add(fragment2);
         list.add(fragment3);
         adapter.setFragments(list);
-        viewPager.setAdapter(adapter);
+        pager.setAdapter(adapter);
     }
 
     private static class SlidingFinishPagerAdapter extends FragmentPagerAdapter {

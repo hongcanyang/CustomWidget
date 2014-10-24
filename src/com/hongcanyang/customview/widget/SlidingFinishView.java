@@ -42,8 +42,6 @@ public class SlidingFinishView extends RelativeLayout implements OnTouchListener
 
     private boolean isSliding = false;
 
-    private boolean hasMeasure = false;
-
     private ViewPager viewPager;
 
     private int touchSlop;
@@ -113,7 +111,7 @@ public class SlidingFinishView extends RelativeLayout implements OnTouchListener
         return super.onInterceptTouchEvent(ev);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "NewApi"})
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -127,7 +125,7 @@ public class SlidingFinishView extends RelativeLayout implements OnTouchListener
             int x = (int) event.getRawX();
             int moveY = (int) event.getRawY();
             int moveX = x;
-            if ((moveX - downX) > touchSlop
+            if (Math.abs(moveX - downX) > touchSlop
                     && Math.abs(moveY - downY) < touchSlop) {
                 isSliding = true;
                 if (isTouchOnAbsListView()) {
@@ -142,7 +140,7 @@ public class SlidingFinishView extends RelativeLayout implements OnTouchListener
             }
 
             int dx = lastX - x;
-            if (dx > 0) {
+            if (parentView.getScrollX() >= 0 && dx > 0) {
                 dx = 0;
             }
             if (isSliding) {
