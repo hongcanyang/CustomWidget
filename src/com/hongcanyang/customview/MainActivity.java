@@ -13,7 +13,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private Button slidingFinishBtn;
     private Button verticalViewGroupBtn;
-    private Button scaleImageBtn;
+    private Button scaleImageBtn, likeWXTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,8 @@ public class MainActivity extends Activity implements OnClickListener {
         verticalViewGroupBtn.setOnClickListener(this);
         scaleImageBtn = (Button)findViewById(R.id.main_scale_image);
         scaleImageBtn.setOnClickListener(this);
+        likeWXTP = (Button) findViewById(R.id.main_like_weixin_takephoto);
+        likeWXTP.setOnClickListener(this);
     }
 
     @Override
@@ -40,9 +42,14 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivity(intent2);
             break;
         }
-        case  R.id.main_scale_image: {
+        case R.id.main_scale_image: {
             Intent intent3 = new Intent(MainActivity.this, ScaleImageActivity.class);
             startActivity(intent3);
+            break;
+        }
+        case R.id.main_like_weixin_takephoto: {
+            Intent intent5 = new Intent(MainActivity.this, LikeWeixinTakePhotoActivity.class);
+            startActivity(intent5);
             break;
         }
 

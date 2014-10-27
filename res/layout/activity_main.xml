@@ -21,6 +21,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="缩放的imageview"/>
+      
+      <Button 
+          android:id="@+id/main_like_weixin_takephoto"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="防微信拍照"/>
     
 
 </LinearLayout>
